@@ -1,12 +1,19 @@
 FROM debian:jessie
 
+ENV RUST_VERSION="nightly-x86_64-unknown-linux-gnu"
+
 RUN apt-get update -y && apt-get install -y \
+    curl \
     nasm \
     binutils \
     grub \
     grub-pc-bin \
     xorriso \
     make
+
+RUN curl https://static.rust-lang.org/dist/rust-$RUST_VERSION.tar.gz | tar -zxvf - && \
+    /rust-$RUST_VERSION/install.sh && \
+    rm -rf /rust*
 
 WORKDIR /build
 CMD make
