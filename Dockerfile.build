@@ -1,0 +1,12 @@
+FROM debian:jessie
+
+RUN apt-get update -y && apt-get install -y \
+    nasm \
+    binutils \
+    grub \
+    grub-pc-bin \
+    xorriso \
+    make
+
+WORKDIR /build
+CMD make

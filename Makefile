@@ -8,7 +8,7 @@ assembly_source_files := $(wildcard src/arch/$(arch)/*.asm)
 assembly_object_files := $(patsubst src/arch/$(arch)/%.asm, \
 	build/arch/$(arch)/%.o, $(assembly_source_files))
 
-.PHONY: all clean run iso
+.PHONY: all clean run iso dockerbuild
 
 all: $(kernel)
 
@@ -34,3 +34,8 @@ $(kernel): $(assembly_object_files) $(linker_script)
 build/arch/$(arch)/%.o: src/arch/$(arch)/%.asm
 	@mkdir -p $(shell dirname $@)
 	@nasm -felf64 $< -o $@
+
+dockerbuild:
+	docker build -t rust-kernel-build -f ./Dockerfile.build .
+	docker run -v $(PWD):/build rust-kernel-build make
+	docker run -v $(PWD):/build rust-kernel-build make iso
