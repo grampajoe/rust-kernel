@@ -1,22 +1,16 @@
-#![feature(no_std, lang_items)]
+#![feature(no_std, lang_items, const_fn, unique, core_str_ext)]
 #![no_std]
 
 extern crate rlibc;
+extern crate spin;
+
+#[macro_use]
+mod vga_buffer;
 
 #[no_mangle]
-pub extern fn rust_main() {
-    let hello = b"Hello, world!";
-    let color_byte = 0x1f; // white foreground, blue background
-
-    let mut hello_colored = [color_byte; 26];
-    for (i, char_byte) in hello.into_iter().enumerate() {
-        hello_colored[i*2] = *char_byte;
-    }
-
-    // Point to the center of the VGA buffer
-    let buffer_ptr = (0xb8000 + 1988) as *mut _;
-
-    unsafe { *buffer_ptr = hello_colored };
+pub extern fn rust_main(multiboot_information_address: usize) {
+    vga_buffer::clear_screen();
+    println!("Hello, world{}", "!");
 
     loop{}
 }
