@@ -42,5 +42,4 @@ build/arch/$(arch)/%.o: src/arch/$(arch)/%.asm
 
 dockerbuild:
 	docker build -t rust-kernel-build -f ./Dockerfile.build .
-	docker run -v $(PWD):/build rust-kernel-build make
-	docker run -v $(PWD):/build rust-kernel-build make iso
+	docker run --rm -v $(PWD):/build rust-kernel-build
